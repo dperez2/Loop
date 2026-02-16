@@ -31,7 +31,6 @@ struct AISettingsView: View {
             featureToggleSection
             if foodSearchEnabled {
                 usdaSection
-                aiProviderLinkSection
             }
         }
         .navigationTitle("FoodFinder")
@@ -103,28 +102,6 @@ extension AISettingsView {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-            }
-        }
-    }
-
-    // MARK: AI Provider Link
-
-    private var aiProviderLinkSection: some View {
-        Section {
-            NavigationLink(destination: SharedAI_SettingsView()) {
-                HStack(spacing: 12) {
-                    Image(systemName: "sparkles")
-                        .foregroundColor(.purple)
-                        .frame(width: 28, alignment: .center)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("AI Provider")
-                            .font(.body.weight(.medium))
-                        Text("Configure API key for food analysis. Shared with LoopInsights.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
             }
         }
     }

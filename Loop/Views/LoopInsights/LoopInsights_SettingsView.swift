@@ -73,7 +73,6 @@ struct LoopInsights_SettingsView: View {
         Form {
             featureToggleSection
             if isEnabled {
-                aiProviderLinkSection
                 analysisOptionsSection
                 biometricsSection
                 phase5FeaturesSection
@@ -209,28 +208,6 @@ struct LoopInsights_SettingsView: View {
                     .buttonStyle(.plain)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                 }
-            }
-        }
-    }
-
-    // MARK: - AI Provider Link
-
-    private var aiProviderLinkSection: some View {
-        Section {
-            NavigationLink(destination: SharedAI_SettingsView()) {
-                HStack(spacing: 12) {
-                    Image(systemName: "sparkles")
-                        .foregroundColor(.accentColor)
-                        .frame(width: 28, alignment: .center)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(NSLocalizedString("AI Provider", comment: "LoopInsights AI provider link"))
-                            .font(.body.weight(.medium))
-                        Text(NSLocalizedString("Configure API key for therapy analysis. Shared with FoodFinder.", comment: "LoopInsights AI provider link description"))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
             }
         }
     }
