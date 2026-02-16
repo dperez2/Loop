@@ -15,18 +15,26 @@ struct FoodFinder_SecureStorage {
 
     private static let service = "com.loopkit.loop.foodfinder"
 
-    // MARK: - AI API Key
+    // MARK: - AI API Key (shared with LoopInsights via LoopInsights_SecureStorage)
 
     static func saveAPIKey(_ key: String) throws {
-        try save(key, account: "ai-api-key")
+        try LoopInsights_SecureStorage.saveAPIKey(key)
     }
 
     static func loadAPIKey() -> String? {
-        return load(account: "ai-api-key")
+        if let key = LoopInsights_SecureStorage.loadAPIKey(), !key.isEmpty {
+            return key
+        }
+        if let legacy = load(account: "ai-api-key"), !legacy.isEmpty {
+            try? LoopInsights_SecureStorage.saveAPIKey(legacy)
+            try? delete(account: "ai-api-key")
+            return legacy
+        }
+        return nil
     }
 
     static func deleteAPIKey() throws {
-        try delete(account: "ai-api-key")
+        LoopInsights_SecureStorage.deleteAPIKey()
     }
 
     // MARK: - USDA API Key

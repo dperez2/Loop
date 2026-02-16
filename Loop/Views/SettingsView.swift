@@ -290,6 +290,18 @@ extension SettingsView {
 
     private var configurationSection: some View {
         Section(header: SectionHeader(label: NSLocalizedString("Configuration", comment: "The title of the Configuration section in settings"))) {
+            NavigationLink(destination: SharedAI_SettingsView()) {
+                LargeButton(action: {},
+                            includeArrow: false,
+                            imageView: Image(systemName: "sparkles")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.purple)
+                                .frame(width: 30),
+                            label: NSLocalizedString("AI Provider", comment: "AI Provider settings button"),
+                            descriptiveText: NSLocalizedString("API key for FoodFinder & LoopInsights", comment: "AI Provider descriptive text"))
+            }
+
             NavigationLink(destination: therapySettingsView) {
                 LargeButton(action: { },
                             includeArrow: false,

@@ -236,6 +236,8 @@ extension FoodFinder_FeatureFlags {
 
         ud.set(true, forKey: Keys.byoMigrationComplete)
 
+        SharedAI_Config.ensureMigrationComplete()
+
         #if DEBUG
         print("FoodFinder: BYO migration complete")
         #endif
