@@ -33,6 +33,12 @@ final class LoopInsights_Coordinator: ObservableObject {
     /// Background monitor for proactive suggestions (lazy-initialized)
     lazy var backgroundMonitor: LoopInsights_BackgroundMonitor = LoopInsights_BackgroundMonitor(coordinator: self)
 
+    /// Pre-bolus meal timing monitor (lazy-initialized)
+    lazy var preBolusMonitor: LoopInsights_PreBolusMonitor = LoopInsights_PreBolusMonitor(coordinator: self)
+
+    /// True when using real Loop stores (not test data fixtures).
+    var hasRealStores: Bool { dataProviderBridge != nil }
+
     // MARK: - Data Provider Bridge
 
     private var dataProviderBridge: DataProviderBridge?
@@ -112,11 +118,13 @@ final class LoopInsights_Coordinator: ObservableObject {
             return
         }
         backgroundMonitor.start()
+        preBolusMonitor.start()
     }
 
     /// Stop background monitoring.
     func stopBackgroundMonitoring() {
         backgroundMonitor.stop()
+        preBolusMonitor.stop()
     }
 
     // MARK: - Supplemental AI Context (Phase 5)
@@ -212,6 +220,14 @@ final class LoopInsights_Coordinator: ObservableObject {
             throw LoopInsightsError.insufficientData("Data provider not available")
         }
         return try await bridge.getCarbEntries(start: start, end: end)
+    }
+
+    /// Fetch insulin on board at the given date.
+    func fetchInsulinOnBoard(at date: Date) async throws -> Double {
+        guard let bridge = dataProviderBridge else {
+            throw LoopInsightsError.insufficientData("Data provider not available")
+        }
+        return try await bridge.getInsulinOnBoard(at: date)
     }
 
     // MARK: - Therapy Settings Write Access
@@ -429,5 +445,34 @@ private final class DataProviderBridge: LoopInsightsDataProviderProtocol {
 
     func getLatestStoredSettings() -> StoredSettings {
         return settingsProvider.latestSettings
+    }
+
+    func getInsulinOnBoard(at date: Date) async throws -> Double {
+        return try await withCheckedThrowingContinuation { continuation in
+            doseStore.insulinOnBoard(at: date) { result in
+                switch result {
+                case .success(let insulinValue):
+                    continuation.resume(returning: insulinValue.value)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - LoopInsightsPreBolusDataProvider
+
+extension LoopInsights_Coordinator: LoopInsightsPreBolusDataProvider {
+    func getCarbEntries(start: Date, end: Date) async throws -> [StoredCarbEntry] {
+        try await fetchCarbEntries(start: start, end: end)
+    }
+
+    func getGlucoseSamples(start: Date, end: Date) async throws -> [StoredGlucoseSample] {
+        try await fetchGlucoseSamples(start: start, end: end)
+    }
+
+    func getInsulinOnBoard(at date: Date) async throws -> Double {
+        try await fetchInsulinOnBoard(at: date)
     }
 }

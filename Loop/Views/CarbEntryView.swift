@@ -77,6 +77,12 @@ struct CarbEntryView: View, HorizontalSizeClassOverride {
             ScrollView {
                 warningsCard
 
+                if let provider = viewModel.delegate?.preBolusDataProvider {
+                    LoopInsights_PreBolusAdvisorCard(dataProvider: provider)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                }
+
                 mainCard
                     .padding(.top, 8)
 

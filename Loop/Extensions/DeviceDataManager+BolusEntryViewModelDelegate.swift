@@ -14,6 +14,17 @@ extension DeviceDataManager: CarbEntryViewModelDelegate {
     var defaultAbsorptionTimes: LoopKit.CarbStore.DefaultAbsorptionTimes {
         return carbStore.defaultAbsorptionTimes
     }
+
+    var preBolusDataProvider: LoopInsightsPreBolusDataProvider? {
+        guard LoopInsights_FeatureFlags.isEnabled, LoopInsights_FeatureFlags.preBolusAdvisorEnabled else {
+            return nil
+        }
+        return LoopInsights_PreBolusDataProviderAdapter(
+            glucoseStore: glucoseStore,
+            doseStore: doseStore,
+            carbStore: carbStore
+        )
+    }
 }
 
 extension DeviceDataManager: BolusEntryViewModelDelegate, ManualDoseViewModelDelegate {

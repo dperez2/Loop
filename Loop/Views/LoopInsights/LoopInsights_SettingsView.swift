@@ -39,6 +39,8 @@ struct LoopInsights_SettingsView: View {
     @State private var caffeineTrackingEnabled = LoopInsights_FeatureFlags.caffeineTrackingEnabled
     @State private var nightscoutImportEnabled = LoopInsights_FeatureFlags.nightscoutImportEnabled
     @State private var agpChartEnabled = LoopInsights_FeatureFlags.agpChartEnabled
+    @State private var preBolusAdvisorEnabled = LoopInsights_FeatureFlags.preBolusAdvisorEnabled
+    @State private var preBolusNotificationsEnabled = LoopInsights_FeatureFlags.preBolusNotificationsEnabled
 
     // Nightscout
     @State private var nightscoutConfig = LoopInsightsNightscoutConfig.load()
@@ -103,6 +105,8 @@ struct LoopInsights_SettingsView: View {
             caffeineTrackingEnabled = LoopInsights_FeatureFlags.caffeineTrackingEnabled
             nightscoutImportEnabled = LoopInsights_FeatureFlags.nightscoutImportEnabled
             agpChartEnabled = LoopInsights_FeatureFlags.agpChartEnabled
+            preBolusAdvisorEnabled = LoopInsights_FeatureFlags.preBolusAdvisorEnabled
+            preBolusNotificationsEnabled = LoopInsights_FeatureFlags.preBolusNotificationsEnabled
             nightscoutConfig = LoopInsightsNightscoutConfig.load()
         }
         .alert(
@@ -685,6 +689,30 @@ struct LoopInsights_SettingsView: View {
                 Text(NSLocalizedString("Analyzes glucose responses by food type. Enables Meal Insights view with meal debrief cards and pre-meal AI advisor.", comment: "LoopInsights food response description"))
                     .font(.caption)
                     .foregroundColor(.secondary)
+
+                Divider()
+
+                Toggle(NSLocalizedString("Pre-Bolus Advisor", comment: "LoopInsights pre-bolus advisor toggle"), isOn: $preBolusAdvisorEnabled)
+                    .onChange(of: preBolusAdvisorEnabled) { newValue in
+                        LoopInsights_FeatureFlags.preBolusAdvisorEnabled = newValue
+                        if !newValue {
+                            LoopInsights_FeatureFlags.preBolusNotificationsEnabled = false
+                            preBolusNotificationsEnabled = false
+                        }
+                    }
+                Text(NSLocalizedString("Shows AI pre-bolus timing advice on the carb entry screen. Uses your meal history to suggest when to bolus before eating.", comment: "LoopInsights pre-bolus advisor description"))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                if preBolusAdvisorEnabled {
+                    Toggle(NSLocalizedString("Proactive Pre-Bolus Notifications", comment: "LoopInsights pre-bolus notifications toggle"), isOn: $preBolusNotificationsEnabled)
+                        .onChange(of: preBolusNotificationsEnabled) { newValue in
+                            LoopInsights_FeatureFlags.preBolusNotificationsEnabled = newValue
+                        }
+                    Text(NSLocalizedString("Sends push notifications during your typical meal times if you haven't logged carbs yet. Max 3 per day.", comment: "LoopInsights pre-bolus notifications description"))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
 
                 Divider()
 

@@ -38,6 +38,8 @@ struct LoopInsights_FeatureFlags {
         static let caffeineTrackingEnabled = "LoopInsights_caffeineTrackingEnabled"
         static let nightscoutImportEnabled = "LoopInsights_nightscoutImportEnabled"
         static let agpChartEnabled = "LoopInsights_agpChartEnabled"
+        static let preBolusAdvisorEnabled = "LoopInsights_preBolusAdvisorEnabled"
+        static let preBolusNotificationsEnabled = "LoopInsights_preBolusNotificationsEnabled"
     }
 
     private static let defaults = UserDefaults.standard
@@ -239,6 +241,18 @@ struct LoopInsights_FeatureFlags {
     static var agpChartEnabled: Bool {
         get { defaults.bool(forKey: Keys.agpChartEnabled) }
         set { defaults.set(newValue, forKey: Keys.agpChartEnabled) }
+    }
+
+    /// Enables the Pre-Bolus / Meal Timing Advisor (in-flow card and optional proactive notifications).
+    static var preBolusAdvisorEnabled: Bool {
+        get { defaults.bool(forKey: Keys.preBolusAdvisorEnabled) }
+        set { defaults.set(newValue, forKey: Keys.preBolusAdvisorEnabled) }
+    }
+
+    /// Enables proactive pre-bolus push notifications during typical meal windows. Requires preBolusAdvisorEnabled.
+    static var preBolusNotificationsEnabled: Bool {
+        get { defaults.bool(forKey: Keys.preBolusNotificationsEnabled) }
+        set { defaults.set(newValue, forKey: Keys.preBolusNotificationsEnabled) }
     }
 
     // MARK: - AI Configuration

@@ -14,6 +14,12 @@ import Combine
 protocol CarbEntryViewModelDelegate: AnyObject, BolusEntryViewModelDelegate {
     var analyticsServicesManager: AnalyticsServicesManager { get }
     var defaultAbsorptionTimes: CarbStore.DefaultAbsorptionTimes { get }
+    /// Optional: provides data for Pre-Bolus Advisor card when LoopInsights is enabled.
+    var preBolusDataProvider: LoopInsightsPreBolusDataProvider? { get }
+}
+
+extension CarbEntryViewModelDelegate {
+    var preBolusDataProvider: LoopInsightsPreBolusDataProvider? { nil }
 }
 
 final class CarbEntryViewModel: ObservableObject {
