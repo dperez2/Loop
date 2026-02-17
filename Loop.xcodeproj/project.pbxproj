@@ -413,6 +413,7 @@
 		A9D5C5B625DC6C6A00534873 /* LoopAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D5C5B525DC6C6A00534873 /* LoopAppManager.swift */; };
 		A9DAE7D02332D77F006AE942 /* LoopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DAE7CF2332D77F006AE942 /* LoopTests.swift */; };
 		A9DCF32A25B0FABF00C89088 /* LoopUIColorPalette+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCF2D525B0F3C500C89088 /* LoopUIColorPalette+Default.swift */; };
+		B582CB612A123456006CCD7C /* LoopDesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B582CB602A123456006CCD7C /* LoopDesignTokens.swift */; };
 		A9DF02CB24F72B9E00B7C988 /* CriticalEventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF02CA24F72B9E00B7C988 /* CriticalEventLogTests.swift */; };
 		A9DFAFB324F0415E00950D1E /* CarbBackfillRequestUserInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DFAFB224F0415E00950D1E /* CarbBackfillRequestUserInfoTests.swift */; };
 		A9DFAFB524F048A000950D1E /* WatchHistoricalCarbsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DFAFB424F048A000950D1E /* WatchHistoricalCarbsTests.swift */; };
@@ -1291,6 +1292,7 @@
 		A9D5C5B525DC6C6A00534873 /* LoopAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopAppManager.swift; sourceTree = "<group>"; };
 		A9DAE7CF2332D77F006AE942 /* LoopTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoopTests.swift; sourceTree = "<group>"; };
 		A9DCF2D525B0F3C500C89088 /* LoopUIColorPalette+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoopUIColorPalette+Default.swift"; sourceTree = "<group>"; };
+		B582CB602A123456006CCD7C /* LoopDesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopDesignTokens.swift; sourceTree = "<group>"; };
 		A9DF02CA24F72B9E00B7C988 /* CriticalEventLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriticalEventLogTests.swift; sourceTree = "<group>"; };
 		A9DFAFB224F0415E00950D1E /* CarbBackfillRequestUserInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbBackfillRequestUserInfoTests.swift; sourceTree = "<group>"; };
 		A9DFAFB424F048A000950D1E /* WatchHistoricalCarbsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoricalCarbsTests.swift; sourceTree = "<group>"; };
@@ -2157,6 +2159,7 @@
 				142CB7582A60BF2E0075748A /* EditMode.swift */,
 				A9F703742489C9A000C98AD8 /* GlucoseStore+SimulatedCoreData.swift */,
 				A9DCF2D525B0F3C500C89088 /* LoopUIColorPalette+Default.swift */,
+				B582CB602A123456006CCD7C /* LoopDesignTokens.swift */,
 				89E267FE229267DF00A3F2AF /* Optional.swift */,
 				A967D94B24F99B9300CDDF8A /* OutputStream.swift */,
 				895FE0942201234000FCF18A /* OverrideSelectionViewController.swift */,
@@ -3881,6 +3884,7 @@
 				1D12D3B92548EFDD00B53E8B /* main.swift in Sources */,
 				435400341C9F878D00D5819C /* SetBolusUserInfo.swift in Sources */,
 				A9DCF32A25B0FABF00C89088 /* LoopUIColorPalette+Default.swift in Sources */,
+				B582CB612A123456006CCD7C /* LoopDesignTokens.swift in Sources */,
 				1DDE273E24AEA4B000796622 /* SettingsView.swift in Sources */,
 				SH4R3D410000000000000001 /* SharedAI_Config.swift in Sources */,
 				SH4R3D410000000000000003 /* SharedAI_SettingsView.swift in Sources */,

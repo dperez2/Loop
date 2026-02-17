@@ -1931,7 +1931,7 @@ struct FoodItemDetailRow: View {
                             Text("\(String(format: "%.1f", fiber))")
                                 .font(.caption)
                                 .fontWeight(.medium)
-                                .foregroundColor(Color(red: 0.6, green: 0.4, blue: 0.8))
+                                .foregroundColor(.foodFinderAccent)
                             Text("fiber")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)

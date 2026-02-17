@@ -306,7 +306,6 @@ struct LoopInsights_DashboardView: View {
             HStack(spacing: 6) {
                 ForEach(LoopInsightsAnalysisPeriod.allCases) { period in
                     let isSelected = viewModel.analysisPeriod == period
-                    let clarityBlue = Color(red: 74/255, green: 115/255, blue: 213/255) // #4A73D5
                     Button {
                         viewModel.updateAnalysisPeriod(period)
                     } label: {
@@ -314,12 +313,12 @@ struct LoopInsights_DashboardView: View {
                             .font(.subheadline.weight(.semibold))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
-                            .background(isSelected ? clarityBlue : Color.clear)
+                            .background(isSelected ? Color.loopInsightsAccent : Color.clear)
                             .foregroundColor(isSelected ? .white : Color(.secondaryLabel))
                             .overlay(
                                 Capsule()
                                     .stroke(
-                                        isSelected ? clarityBlue : Color(.systemGray4),
+                                        isSelected ? Color.loopInsightsAccent : Color(.systemGray4),
                                         lineWidth: 1.5
                                     )
                             )

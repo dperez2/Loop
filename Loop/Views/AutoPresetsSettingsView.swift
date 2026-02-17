@@ -49,7 +49,7 @@ struct AutoPresetsSettingsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 6) {
                     Image(systemName: "figure.walk")
-                        .foregroundColor(Color(red: 76/255, green: 175/255, blue: 80/255))
+                        .foregroundColor(.autoPresetsAccent)
                     Text("AUTOPRESETS")
                         .font(.caption)
                         .fontWeight(.semibold)
@@ -515,7 +515,7 @@ struct AutoPresetsIconView: View {
             .resizable()
             .scaledToFit()
             .frame(width: 36, height: 36)
-            .foregroundColor(coordinator.isEnabled ? Color(red: 76/255, green: 175/255, blue: 80/255) : .secondary)
+            .foregroundColor(coordinator.isEnabled ? .autoPresetsAccent : .secondary)
             .scaleEffect(coordinator.isEnabled && isAnimating ? 1.3 : 1.0)
             .animation(
                 coordinator.isEnabled ? .easeInOut(duration: 0.4).repeatForever(autoreverses: true) : .default,

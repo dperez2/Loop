@@ -64,6 +64,10 @@ public final class GlucoseHUDView: BaseHUDView {
         didSet {
             glucoseLabel.text = GlucoseHUDView.staleGlucoseRepresentation
             glucoseLabel.textColor = tintColor
+            // Semibold for clearer visual hierarchy
+            if let font = glucoseLabel.font {
+                glucoseLabel.font = .systemFont(ofSize: font.pointSize, weight: .semibold)
+            }
         }
     }
 
@@ -72,6 +76,7 @@ public final class GlucoseHUDView: BaseHUDView {
             alertLabel.alpha = 0
             alertLabel.textColor = UIColor.white
             alertLabel.layer.cornerRadius = 9
+            alertLabel.layer.cornerCurve = .continuous
             alertLabel.clipsToBounds = true
         }
     }

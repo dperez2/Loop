@@ -26,18 +26,6 @@ struct LiveActivityBottomRowManagerView: View {
         previousConfiguration = (UserDefaults.standard.liveActivity ?? LiveActivitySettings()).bottomRowConfiguration
     }
     
-    var addItem: ActionSheet {
-        var buttons: [ActionSheet.Button] = BottomRowConfiguration.all.map { item in
-            ActionSheet.Button.default(Text(item.description())) {
-                configuration.append(item)
-                
-                isDirty = configuration != previousConfiguration
-            }
-        }
-        buttons.append(.cancel(Text(NSLocalizedString("Cancel", comment: "Button text to cancel"))))
-        
-        return ActionSheet(title: Text(NSLocalizedString("Add item to Lock Screen / CarPlay display", comment: "Title for Add item")), buttons: buttons)
-    }
     
     var body: some View {
         List {
@@ -80,7 +68,17 @@ struct LiveActivityBottomRowManagerView: View {
                 .disabled(configuration.count >= self.maxSize)
             }
         }
-        .actionSheet(isPresented: $showAdd, content: { addItem })
+        .confirmationDialog(NSLocalizedString("Add item to Lock Screen / CarPlay display", comment: "Title for Add item"), isPresented: $showAdd, titleVisibility: .visible) {
+            ForEach(BottomRowConfiguration.all, id: \.self) { item in
+                Button(item.description()) {
+                    configuration.append(item)
+                    isDirty = configuration != previousConfiguration
+                }
+            }
+            Button(NSLocalizedString("Cancel", comment: "Button text to cancel"), role: .cancel) {
+                showAdd = false
+            }
+        }
         .insetGroupedListStyle()
         .navigationBarTitle(Text(NSLocalizedString("Configure Display", comment: "Title for the view to configure the lock screen display")))
     }

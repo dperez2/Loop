@@ -75,7 +75,7 @@ struct AICameraView: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(Color(red: 0.85, green: 0.25, blue: 0.85))
+                                .background(Color.aiAccent.opacity(0.9))
                                 .foregroundColor(.white)
                                 .cornerRadius(14)
                             }

@@ -5,6 +5,9 @@
 //  Created by Nathan Racklyeft on 3/20/16.
 //  Copyright © 2016 Nathan Racklyeft. All rights reserved.
 //
+//  WatchApp color palette — aligned with Loop design system (carbs, glucose, insulin)
+//  Uses asset catalog colors for light/dark mode consistency with main app.
+//
 
 import UIKit
 

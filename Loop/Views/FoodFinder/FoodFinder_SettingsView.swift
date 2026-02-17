@@ -53,7 +53,7 @@ extension AISettingsView {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 6) {
                     Image(systemName: "fork.knife.circle.fill")
-                        .foregroundColor(Color(red: 107/255, green: 47/255, blue: 160/255))
+                        .foregroundColor(.foodFinderAccent)
                     Text("FOODFINDER")
                         .font(.caption)
                         .fontWeight(.semibold)

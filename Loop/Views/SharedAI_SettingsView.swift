@@ -45,7 +45,7 @@ struct SharedAI_SettingsView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
-                            .foregroundColor(.purple)
+                            .foregroundColor(.aiAccent)
                         Text("AI PROVIDER")
                             .font(.caption)
                             .fontWeight(.semibold)

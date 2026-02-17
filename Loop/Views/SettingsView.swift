@@ -34,7 +34,7 @@ public struct SettingsView: View {
             case deletePumpData
         }
         
-        enum ActionSheet: String, Identifiable {
+        enum PickerType: String, Identifiable {
             var id: String {
                 rawValue
             }
@@ -53,7 +53,7 @@ public struct SettingsView: View {
         }
     }
     
-    @State private var actionSheet: Destination.ActionSheet?
+    @State private var pickerType: Destination.PickerType?
     @State private var alert: Destination.Alert?
     @State private var sheet: Destination.Sheet?
     
@@ -66,7 +66,7 @@ public struct SettingsView: View {
     }
     
     public var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Group {
                     loopSection
@@ -107,24 +107,13 @@ public struct SettingsView: View {
             .insetGroupedListStyle()
             .navigationBarTitle(Text(NSLocalizedString("Settings", comment: "Settings screen title")))
             .navigationBarItems(trailing: dismissButton)
-            .actionSheet(item: $actionSheet) { actionSheet in
-                switch actionSheet {
-                case .cgmPicker:
-                    return ActionSheet(
-                        title: Text("Add CGM", comment: "The title of the CGM chooser in settings"),
-                        buttons: cgmChoices
-                    )
-                case .pumpPicker:
-                    return ActionSheet(
-                        title: Text("Add Pump", comment: "The title of the pump chooser in settings"),
-                        buttons: pumpChoices
-                    )
-                case .servicePicker:
-                    return ActionSheet(
-                        title: Text("Add Service", comment: "The title of the add service action sheet in settings"),
-                        buttons: serviceChoices
-                    )
-                }
+            .confirmationDialog(pickerType.map { pickerTitle(for: $0) } ?? "", isPresented: Binding(
+                get: { pickerType != nil },
+                set: { if !$0 { pickerType = nil } }
+            ), presenting: pickerType, titleVisibility: .visible) { sheet in
+                cgmPumpServiceConfirmationActions(for: sheet)
+            } message: { _ in
+                EmptyView()
             }
             .alert(item: $alert) { alert in
                 switch alert {
@@ -141,7 +130,6 @@ public struct SettingsView: View {
                 }
             }
         }
-        .navigationViewStyle(.stack)
     }
 
     private func menuItemsForSection(name: String) -> some View {
@@ -358,7 +346,7 @@ extension SettingsView {
                         label: viewModel.pumpManagerSettingsViewModel.name(),
                         descriptiveText: NSLocalizedString("Insulin Pump", comment: "Descriptive text for Insulin Pump"))
         } else if viewModel.isOnboardingComplete {
-            LargeButton(action: { actionSheet = .pumpPicker },
+            LargeButton(action: { pickerType = .pumpPicker },
                         includeArrow: false,
                         imageView: plusImage,
                         label: NSLocalizedString("Add Pump", comment: "Title text for button to add pump device"),
@@ -366,14 +354,42 @@ extension SettingsView {
         }
     }
     
-    private var pumpChoices: [ActionSheet.Button] {
-        var result = viewModel.pumpManagerSettingsViewModel.availableDevices.map { availableDevice in
-            ActionSheet.Button.default(Text(availableDevice.localizedTitle)) {
-                self.viewModel.pumpManagerSettingsViewModel.didTapAdd(availableDevice)
+    @ViewBuilder
+    private func cgmPumpServiceConfirmationActions(for sheet: Destination.PickerType) -> some View {
+        switch sheet {
+        case .cgmPicker:
+            ForEach(viewModel.cgmManagerSettingsViewModel.availableDevices.sorted(by: { $0.localizedTitle < $1.localizedTitle }), id: \.identifier) { device in
+                Button(device.localizedTitle) {
+                    viewModel.cgmManagerSettingsViewModel.didTapAdd(device)
+                    pickerType = nil
+                }
+            }
+        case .pumpPicker:
+            ForEach(viewModel.pumpManagerSettingsViewModel.availableDevices, id: \.identifier) { device in
+                Button(device.localizedTitle) {
+                    viewModel.pumpManagerSettingsViewModel.didTapAdd(device)
+                    pickerType = nil
+                }
+            }
+        case .servicePicker:
+            ForEach(viewModel.servicesViewModel.inactiveServices(), id: \.identifier) { service in
+                Button(service.localizedTitle) {
+                    viewModel.servicesViewModel.didTapAddService(service)
+                    pickerType = nil
+                }
             }
         }
-        result.append(.cancel())
-        return result
+        Button(NSLocalizedString("Cancel", comment: "Cancel button"), role: .cancel) {
+            pickerType = nil
+        }
+    }
+
+    private func pickerTitle(for sheet: Destination.PickerType) -> String {
+        switch sheet {
+        case .cgmPicker: return NSLocalizedString("Add CGM", comment: "The title of the CGM chooser in settings")
+        case .pumpPicker: return NSLocalizedString("Add Pump", comment: "The title of the pump chooser in settings")
+        case .servicePicker: return NSLocalizedString("Add Service", comment: "The title of the add service action sheet in settings")
+        }
     }
     
     @ViewBuilder
@@ -385,7 +401,7 @@ extension SettingsView {
                         label: viewModel.cgmManagerSettingsViewModel.name(),
                         descriptiveText: NSLocalizedString("Continuous Glucose Monitor", comment: "Descriptive text for Continuous Glucose Monitor"))
         } else {
-            LargeButton(action: { actionSheet = .cgmPicker },
+            LargeButton(action: { pickerType = .cgmPicker },
                         includeArrow: false,
                         imageView: plusImage,
                         label: NSLocalizedString("Add CGM", comment: "Title text for button to add CGM device"),
@@ -411,7 +427,7 @@ extension SettingsView {
                             imageView: Image(systemName: "brain.head.profile")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .foregroundColor(Color(red: 26/255, green: 138/255, blue: 158/255))
+                                .foregroundColor(.loopInsightsAccent)
                                 .frame(width: 30),
                             label: NSLocalizedString("LoopInsights", comment: "LoopInsights settings button"),
                             descriptiveText: NSLocalizedString("AI-powered therapy settings analysis", comment: "LoopInsights settings descriptive text"))
@@ -425,25 +441,13 @@ extension SettingsView {
             LargeButton(action: {},
                         includeArrow: false,
                         imageView: Image(systemName: "fork.knife.circle.fill")
-                            .foregroundColor(Color(red: 107/255, green: 47/255, blue: 160/255))
+                            .foregroundColor(.foodFinderAccent)
                             .font(.system(size: 36)),
                         label: NSLocalizedString("FoodFinder", comment: "Title text for button to FoodFinder Settings"),
                         descriptiveText: NSLocalizedString("AI-powered & barcode food analysis", comment: "Descriptive text for FoodFinder Settings"))
         }
     }
 
-    private var cgmChoices: [ActionSheet.Button] {
-        var result = viewModel.cgmManagerSettingsViewModel.availableDevices
-            .sorted(by: {$0.localizedTitle < $1.localizedTitle})
-            .map { availableDevice in
-                ActionSheet.Button.default(Text(availableDevice.localizedTitle)) {
-                    self.viewModel.cgmManagerSettingsViewModel.didTapAdd(availableDevice)
-            }
-        }
-        result.append(.cancel())
-        return result
-    }
-    
     private var servicesSection: some View {
         Section(header: SectionHeader(label: NSLocalizedString("Services", comment: "The title of the services section in settings"))) {
             ForEach(viewModel.servicesViewModel.activeServices().indices, id: \.self) { index in
@@ -454,23 +458,13 @@ extension SettingsView {
                             descriptiveText: "")
             }
             if viewModel.servicesViewModel.inactiveServices().count > 0 {
-                LargeButton(action: { actionSheet = .servicePicker },
+                LargeButton(action: { pickerType = .servicePicker },
                             includeArrow: false,
                             imageView: plusImage,
                             label: NSLocalizedString("Add Service", comment: "The title of the add service button in settings"),
                             descriptiveText: NSLocalizedString("Tap here to set up a Service", comment: "The descriptive text of the add service button in settings"))
             }
         }
-    }
-    
-    private var serviceChoices: [ActionSheet.Button] {
-        var result = viewModel.servicesViewModel.inactiveServices().map { availableService in
-            ActionSheet.Button.default(Text(availableService.localizedTitle)) {
-                self.viewModel.servicesViewModel.didTapAddService(availableService)
-            }
-        }
-        result.append(.cancel())
-        return result
     }
     
     private var deleteDataSection: some View {
@@ -661,8 +655,9 @@ fileprivate struct LargeButton<Content: View, SecondaryContent: View>: View {
                 }
                 
                 if includeArrow {
-                    // TODO: Ick. I can't use a NavigationLink because we're not Navigating, but this seems worse somehow.
-                    Image(systemName: "chevron.right").foregroundColor(.gray).font(.footnote)
+                    Image(systemName: "chevron.right")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(Color(.tertiaryLabel))
                 }
             }
             .padding(EdgeInsets(top: topBottomPadding, leading: 0, bottom: topBottomPadding, trailing: 0))
